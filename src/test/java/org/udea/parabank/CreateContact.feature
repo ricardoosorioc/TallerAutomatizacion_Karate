@@ -7,7 +7,7 @@ Feature: create contact to app contact
     * header Content-Type = 'application/json' 
 
     # Función para generar un email único
-    * def generateUniqueEmail = function() { return 'karate_test_contact_' + java.lang.System.currentTimeMillis() + '_' + java.util.UUID.randomUUID().toString() + '@example.com'; }
+    * def generateUniqueEmail = function() { return 'kt_contact_' + java.lang.System.currentTimeMillis()  + '@example.com'; }
     * def Faker = Java.type('com.github.javafaker.Faker') // Definir la clase Faker directamente aquí
     * def faker = new Faker()
 
