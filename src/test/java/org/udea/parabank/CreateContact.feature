@@ -7,7 +7,7 @@ Feature: create contact to app contact
     * header Content-Type = 'application/json' 
 
     # Función para generar un email único
-    * def generateUniqueEmail = function() { return 'karate_test_contact_' + java.lang.System.currentTimeMillis() + '_' + karate.uuid() + '@example.com'; }
+    * def generateUniqueEmail = function() { return 'karate_test_contact_' + java.lang.System.currentTimeMillis() + '_' + java.util.UUID.randomUUID().toString() + '@example.com'; }
     * def Faker = Java.type('com.github.javafaker.Faker') // Definir la clase Faker directamente aquí
     * def faker = new Faker()
 
@@ -55,7 +55,7 @@ Feature: create contact to app contact
     # Intentar crear contacto sin firstName
     Given path '/contacts'
     And header Authorization = 'Bearer ' + authToken
-    And request { "lastName": "Gomez", "email": "#(generateUniqueEmail())" }
+    And request { "lastName": "Gomez", "email": "prueba@test.com" }
     When method POST
     Then status 400
     And match response.message contains 'firstName'
