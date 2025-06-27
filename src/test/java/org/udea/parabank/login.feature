@@ -10,16 +10,52 @@ Feature: Login to app contact
     And request {"email": "ri@ro.com","password": "1234567"}
     When method POST
     Then status 200
-    And match response ==
-    """
-    {
-    "user": {
-        "_id": '#string',
-        "firstName": '#string',
-        "lastName": '#string',
-        "email": '#string',
-        "__v": '#number',
-    },
-    "token": '#string',
-    }
-    """
+     And match response.user._id == '#string'
+    And match response.user.firstName == '#string'
+    And match response.user.lastName == '#string'
+    And match response.user.email == 'ri@ro.com' // Validar que el email retornado sea el que enviamos
+    And match response.user.__v == '#number'
+    And match response.token == '#string'
+    * def authToken = response.token // Almacenar el token para reutilizarlo
+
+    # Criterio: El token debe ser reutilizable en peticiones subsecuentes (por ejemplo, para obtener /contacts)
+    Given path '/contacts'
+    And header Authorization = 'Bearer ' + authToken
+    When method GET
+    Then status 201
+    And match response == '#array' // Esperar un array de contactos
+
+  Scenario: Login con credenciales inválidas (email o password incorrectos)
+    Given path '/users/login'
+    And request {"email": "ri@ro.com","password": "password_invalido"}
+    When method POST
+    Then status 401
+    And match response.error == 'Incorrect email or password' // Mensaje de error claro
+
+  Scenario: Login con email no existente
+    Given path '/users/login'
+    And request {"email": "noexiste@example.com","password": "1234567"}
+    When method POST
+    Then status 401
+    And match response.error == 'Incorrect email or password'
+
+  Scenario: Login con email sin formato válido (a nivel de API)
+    Given path '/users/login'
+    And request {"email": "email_invalido","password": "1234567"}
+    When method POST
+    Then status 401
+    And match response.message == 'User validation failed: email: is not a valid email address'  
+
+  Scenario: Login con campos requeridos faltantes (email ausente)
+    Given path '/users/login'
+    And request {"password": "1234567"}
+    When method POST
+    Then status 401
+    And match response.message contains 'email'
+
+  Scenario: Login con campos requeridos faltantes (password ausente)
+    Given path '/users/login'
+    And request {"email": "ri@ro.com"}
+    When method POST
+    Then status 401
+    And match response.message contains 'password'
