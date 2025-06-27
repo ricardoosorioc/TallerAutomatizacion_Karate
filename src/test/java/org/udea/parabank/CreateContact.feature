@@ -8,7 +8,8 @@ Feature: create contact to app contact
 
     # Función para generar un email único
     * def generateUniqueEmail = function() { return 'karate_test_contact_' + java.lang.System.currentTimeMillis() + '_' + karate.uuid() + '@example.com'; }
-    * def faker = new karate.get('faker') // Acceder a la instancia de Faker definida en karate-config.js
+    * def Faker = Java.type('com.github.javafaker.Faker') // Definir la clase Faker directamente aquí
+    * def faker = new Faker()
 
   Scenario: Login y crear un nuevo contacto exitosamente con verificacion
     # Prerrequisito: Login para obtener un token
