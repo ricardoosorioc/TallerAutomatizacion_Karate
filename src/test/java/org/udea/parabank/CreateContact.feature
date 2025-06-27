@@ -26,19 +26,7 @@ Feature: create contact to app contact
     # Crear contacto
     Given path '/contacts'
     And header Authorization = 'Bearer ' + authToken
-    And request {
-      "firstName": "#(contactFirstName)",
-      "lastName": "#(contactLastName)",
-      "birthdate": "1990-01-01",
-      "email": "#(newEmail)",
-      "phone": "8005555555",
-      "street1": "1 Main St.",
-      "street2": "Apartment A",
-      "city": "Anytown",
-      "stateProvince": "KS",
-      "postalCode": "12345",
-      "country": "USA"
-    }
+    And request { "firstName": "#(contactFirstName)", "lastName": "#(contactLastName)", "birthdate": "1970-01-01", "email": "#(newEmail)", "phone": "8005555555", "street1": "1 Main St.", "street2": "Apartment A", "city": "Anytown", "stateProvince": "KS", "postalCode": "12345", "country": "USA" }
     When method POST
     Then status 201
     And match response.firstName == contactFirstName
