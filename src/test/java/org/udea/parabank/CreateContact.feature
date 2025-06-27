@@ -4,20 +4,21 @@ Feature: create contact to app contact
   Background:
     * url baseUrl
     * header Accept = 'application/json'
+    * header Content-Type = 'application/json' 
 
-     # Función para generar un email único
+    # Función para generar un email único
     * def generateUniqueEmail = function() { return 'karate_test_contact_' + java.lang.System.currentTimeMillis() + '_' + karate.uuid() + '@example.com'; }
     * def faker = new karate.get('faker') // Acceder a la instancia de Faker definida en karate-config.js
 
-Scenario: Login y crear contacto
-  # Login
-  Given path '/users/login'
-  And request { "email": "ri@ro.com", "password": "1234567" }
-  When method POST
-  Then status 200
-  * def authToken = response.token
+  Scenario: Login y crear un nuevo contacto exitosamente con verificacion
+    # Prerrequisito: Login para obtener un token
+    Given path '/users/login'
+    And request { "email": "ri@ro.com", "password": "1234567" }
+    When method POST
+    Then status 200
+    * def authToken = response.token
 
-  # Generar datos únicos para el contacto
+    # Generar datos únicos para el contacto
     * def newEmail = generateUniqueEmail()
     * def contactFirstName = faker.name().firstName()
     * def contactLastName = faker.name().lastName()
@@ -96,4 +97,4 @@ Scenario: Login y crear contacto
     When method POST
     Then status 400
     And match response.message == 'Email already exists'
- 
+    
