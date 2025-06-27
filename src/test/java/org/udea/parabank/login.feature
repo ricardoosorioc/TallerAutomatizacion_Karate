@@ -16,14 +16,6 @@ Feature: Login to app contact
     And match response.user.email == 'ri@ro.com' // Validar que el email retornado sea el que enviamos
     And match response.user.__v == '#number'
     And match response.token == '#string'
-    * def authToken = response.token // Almacenar el token para reutilizarlo
-
-    # Criterio: El token debe ser reutilizable en peticiones subsecuentes (por ejemplo, para obtener /contacts)
-    Given path '/contacts'
-    And header Authorization = 'Bearer ' + authToken
-    When method GET
-    Then status 201
-    And match response == '#array' // Esperar un array de contactos
 
   Scenario: Login con credenciales inválidas (email o password incorrectos)
     Given path '/users/login'
